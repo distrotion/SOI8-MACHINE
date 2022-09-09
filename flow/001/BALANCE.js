@@ -479,14 +479,14 @@ router.post('/WBA_SEND_DATA', async (req, res) => {
     let input = req.body;
     //-------------------------------------
     output = 'NOK';
-    if (input['Barcode'] != undefined) {
+    if (input['Barcode'] != undefined && input['Barcode'] != '') {
 
 
 
         let check1 = await mongodb.find(DBins, colection, { "POID": input['Barcode'], "STATUS": "ACTIVE" });
 
         if (check1[0][`BDATA`][`Result`] !== '') {
-            outputQ = {//PLANT
+            outputQ = {
                 poid: input['Barcode'],
                 plant: check1[0][`PLANT`],
                 item: "NVC",
