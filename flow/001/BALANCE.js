@@ -494,7 +494,6 @@ router.post('/WBA_SEND_DATA', async (req, res) => {
             }
  
             let resp = await axios.post('http://172.23.10.34:15000/valueinput', outputQ);
-            // return resp.data;
      
             if (resp.status == 200) {
                 var ret = resp.data
