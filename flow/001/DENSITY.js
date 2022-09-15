@@ -235,7 +235,27 @@ router.post('/DENSITY_SEND_DATA', async (req, res) => {
 });
 
 
+router.post('/DENSITY_Result', async (req, res) => {
 
+    console.log("--Result--");
+    //-------------------------------------
+    console.log(req.body);
+    let input = req.body;
+    //-------------------------------------
+    output = 'NOK';
+    if (input['Barcode'] != undefined && input['Barcode'] != ''&& input['Result'] != undefined) {
+  
+        let check1 = await mongodb.find(DBins, colection, { "POID": input['Barcode'], "STATUS": "ACTIVE" });
+  
+        if(check1.length > 0){
+            let ins = await mongodb.update(DBins, colection, { "POID": input['Barcode'], "STATUS": "ACTIVE" }, { $set: { "BDATA.Result": input['Result'] } });
+            output = 'OK';
+        }
+  
+    }
+  
+    return res.json(output);
+  });
 
 
 
