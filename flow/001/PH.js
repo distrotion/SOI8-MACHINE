@@ -7,8 +7,8 @@ var axios = require('axios');
 
 
 //
-let DBins = 'BALANCEdb'
-let colection = 'main'
+let DBins = 'INSdb'
+let colection = 'PHmain'
 //
 let PREMIXserver = 'PREMIX_MASTER';
 let COILCOATINGserver = 'COILCOATING_MASTER';
