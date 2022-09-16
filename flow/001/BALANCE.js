@@ -507,4 +507,40 @@ router.post('/WBA_SEND_DATA', async (req, res) => {
     return res.json(output);
 });
 
+router.post('/WBA_SEND_DATA_ADJ', async (req, res) => {
+
+    console.log("--WBA_SEND_DATA_ADJ--");
+    //-------------------------------------
+    console.log(req.body);
+    let input = req.body;
+    //-------------------------------------
+    output = 'NOK';
+    if (input['Barcode'] != undefined && input['Barcode'] != '') {
+
+        let check1 = await mongodb.find(DBins, colection, { "POID": input['Barcode'], "STATUS": "ACTIVE" });
+
+        if (check1[0][`BDATA`][`Result`] !== '') {
+            outputQ = {
+                poid: input['Barcode'],
+                plant: check1[0][`PLANT`],
+                item: "NVC",
+                value: check1[0][`BDATA`][`Result`],
+            }
+ 
+            let resp = await axios.post('http://172.23.10.34:15000/valueinputadj', outputQ);
+     
+            if (resp.status == 200) {
+                var ret = resp.data
+               output = ret[`return`]
+               if(ret[`return`] === 'OK'){
+                let ins = await mongodb.update(DBins, colection, { "POID": input['Barcode'], "STATUS": "ACTIVE" }, { $set: { "SEND": "SEND" } });
+               }
+            }
+        }
+
+    }
+
+    return res.json(output);
+});
+
 module.exports = router;
