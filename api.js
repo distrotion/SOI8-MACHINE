@@ -8,6 +8,7 @@ router.use(require("./flow/001/PH"))
 router.use(require("./flow/001/SG"))
 router.use(require("./flow/001/DENSITY"))
 router.use(require("./flow/001/KARL"))
+router.use(require("./flow/001/BALANCEa"))
 
 //-----------------------------------------
 router.use(require("./flow/testflow/testflow"))
