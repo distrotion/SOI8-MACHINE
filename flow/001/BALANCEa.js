@@ -1,16 +1,3 @@
-//------------------------------------------------ user
-//------------------------------------------------ Custommer data
-//------------------------------------------------ Frequency
-//------------------------------------------------ Routine Customer
-//------------------------------------------------ GroupName
-//------------------------------------------------ SampleType
-//------------------------------------------------ SampleName
-//------------------------------------------------ Tank
-//------------------------------------------------ Instrument
-//------------------------------------------------ Unit
-//------------------------------------------------ item
-//------------------------------------------------ ItemGroup
-
 const e = require("express");
 const express = require("express");
 const router = express.Router();
@@ -21,7 +8,7 @@ var axios = require('axios');
 
 //
 let DBins = 'INSdb'
-let colection = 'KARLmain'
+let colection = 'BALANCEamain'
 //
 let PREMIXserver = 'PREMIX_MASTER';
 let COILCOATINGserver = 'COILCOATING_MASTER';
@@ -35,7 +22,7 @@ let dbin = 'specification';
 //
 
 
-router.post('/register_KARL', async (req, res) => {
+router.post('/register_BALANCEa', async (req, res) => {
 
   //-------------------------------------
   console.log(req.body);
@@ -192,9 +179,9 @@ router.post('/register_KARL', async (req, res) => {
   return res.json(output);
 });
 
-router.post('/KARL_REJ', async (req, res) => {
+router.post('/BALANCEa_REJ', async (req, res) => {
 
-  console.log("--KARL_REJ--");
+  console.log("--BALANCEa_REJ--");
   //-------------------------------------
   console.log(req.body);
   let input = req.body;
@@ -211,9 +198,9 @@ router.post('/KARL_REJ', async (req, res) => {
 });
 
 
-router.post('/KARL_SEND_DATA', async (req, res) => {
+router.post('/BALANCEa_SEND_DATA', async (req, res) => {
 
-  console.log("--KARL_SEND_DATA--");
+  console.log("--BALANCEa_SEND_DATA--");
   //-------------------------------------
   console.log(req.body);
   let input = req.body;
@@ -227,7 +214,7 @@ router.post('/KARL_SEND_DATA', async (req, res) => {
           outputQ = {
               poid: input['Barcode'],
               plant: check1[0][`PLANT`],
-              item: "KARL",
+              item: "NVC",
               value: check1[0][`BDATA`][`Result`],
           }
 
@@ -248,9 +235,9 @@ router.post('/KARL_SEND_DATA', async (req, res) => {
 });
 
 
-router.post('/KARL_SEND_DATA_ADJ', async (req, res) => {
+router.post('/BALANCEa_SEND_DATA_ADJ', async (req, res) => {
 
-    console.log("--KARL_SEND_DATA_ADJ--");
+    console.log("--BALANCEa_SEND_DATA_ADJ--");
     //-------------------------------------
     console.log(req.body);
     let input = req.body;
@@ -264,7 +251,7 @@ router.post('/KARL_SEND_DATA_ADJ', async (req, res) => {
             outputQ = {
                 poid: input['Barcode'],
                 plant: check1[0][`PLANT`],
-                item: "KARL",
+                item: "NVC",
                 value: check1[0][`BDATA`][`Result`],
             }
   
@@ -282,10 +269,10 @@ router.post('/KARL_SEND_DATA_ADJ', async (req, res) => {
     }
   
     return res.json(output);
-});
+  });
 
 
-router.post('/KARL_Result', async (req, res) => {
+router.post('/BALANCEa_Result', async (req, res) => {
 
     console.log("--Result--");
     //-------------------------------------
