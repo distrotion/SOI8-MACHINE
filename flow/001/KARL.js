@@ -251,7 +251,7 @@ router.post('/KARL_SEND_DATA_ADJ', async (req, res) => {
             outputQ = {
                 poid: input['Barcode'],
                 plant: check1[0][`PLANT`],
-                item: "KARL",
+                item: "MOI",
                 value: check1[0][`BDATA`][`Result`],
             }
   
