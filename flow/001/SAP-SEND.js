@@ -7,7 +7,18 @@ var axios = require('axios');
 
 router.post('/sap_test', async (req, res) => {
 
-  let check1 = await mongodb.find("SAP_MASTER", "master", {MKMNR: {$regex:"20873"} });
+  let check1 = await mongodb.find("SAP_MASTER", "master", {MKMNR: {$regex:"20846"} });
+  console.log(check1)
+  return res.json(check1);
+});
+
+router.post('/sap_test_MAT', async (req, res) => {
+  //-------------------------------------
+  console.log(req.body);
+  let input = req.body;
+  //-------------------------------------
+
+  let check1 = await mongodb.find("SAP_MASTER", "master", {MKMNR: {$regex:input['CP']} });
   console.log(check1)
   return res.json(check1);
 });

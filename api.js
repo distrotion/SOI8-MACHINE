@@ -11,6 +11,10 @@ router.use(require("./flow/001/KARL"))
 router.use(require("./flow/001/BALANCEa"))
 router.use(require("./flow/001/SAP-SEND"))
 
+router.use(require("./flow/001/AUTOTITRATE"))
+router.use(require("./flow/001/MINIAV"))
+router.use(require("./flow/001/PARTICALSIZE"))
+
 //SAP-SEND
 //-----------------------------------------
 router.use(require("./flow/testflow/testflow"))
