@@ -15,6 +15,12 @@ router.use(require("./flow/001/AUTOTITRATE"))
 router.use(require("./flow/001/MINIAV"))
 router.use(require("./flow/001/PARTICLESIZE"))
 
+
+router.use(require("./flow/001/ECm"))
+router.use(require("./flow/001/BOOKFEILD"))
+router.use(require("./flow/001/PENETROMETER"))
+
+
 //SAP-SEND
 //-----------------------------------------
 router.use(require("./flow/testflow/testflow"))
