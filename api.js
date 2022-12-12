@@ -13,7 +13,7 @@ router.use(require("./flow/001/SAP-SEND"))
 
 router.use(require("./flow/001/AUTOTITRATE"))
 router.use(require("./flow/001/MINIAV"))
-router.use(require("./flow/001/PARTICALSIZE"))
+router.use(require("./flow/001/PARTICLESIZE"))
 
 //SAP-SEND
 //-----------------------------------------

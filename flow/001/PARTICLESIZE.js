@@ -8,7 +8,7 @@ var axios = require('axios');
 
 //
 let DBins = 'INSdb'
-let colection = 'PARTICALSIZEmain'
+let colection = 'PARTICLESIZEmain'
 //
 let PREMIXserver = 'PREMIX_MASTER';
 let COILCOATINGserver = 'COILCOATING_MASTER';
@@ -22,7 +22,7 @@ let dbin = 'specification';
 //
 
 
-router.post('/register_PARTICALSIZE', async (req, res) => {
+router.post('/register_PARTICLESIZE', async (req, res) => {
 
     //-------------------------------------
     console.log(req.body);
@@ -179,9 +179,9 @@ router.post('/register_PARTICALSIZE', async (req, res) => {
     return res.json(output);
 });
 
-router.post('/PARTICALSIZE_REJ', async (req, res) => {
+router.post('/PARTICLESIZE_REJ', async (req, res) => {
 
-    console.log("--PARTICALSIZE_REJ--");
+    console.log("--PARTICLESIZE_REJ--");
     //-------------------------------------
     console.log(req.body);
     let input = req.body;
@@ -198,9 +198,9 @@ router.post('/PARTICALSIZE_REJ', async (req, res) => {
 });
 
 
-router.post('/PARTICALSIZE_SEND_DATA', async (req, res) => {
+router.post('/PARTICLESIZE_SEND_DATA', async (req, res) => {
 
-    console.log("--PARTICALSIZE_SEND_DATA--");
+    console.log("--PARTICLESIZE_SEND_DATA--");
     //-------------------------------------
     console.log(req.body);
     let input = req.body;
@@ -235,9 +235,9 @@ router.post('/PARTICALSIZE_SEND_DATA', async (req, res) => {
 });
 
 
-router.post('/PARTICALSIZE_SEND_DATA_ADJ', async (req, res) => {
+router.post('/PARTICLESIZE_SEND_DATA_ADJ', async (req, res) => {
 
-    console.log("--PARTICALSIZE_SEND_DATA_ADJ--");
+    console.log("--PARTICLESIZE_SEND_DATA_ADJ--");
     //-------------------------------------
     console.log(req.body);
     let input = req.body;
@@ -268,7 +268,7 @@ router.post('/PARTICALSIZE_SEND_DATA_ADJ', async (req, res) => {
 });
 
 
-router.post('/PARTICALSIZE_Result', async (req, res) => {
+router.post('/PARTICLESIZE_Result', async (req, res) => {
 
     console.log("--Result--");
     //-------------------------------------
