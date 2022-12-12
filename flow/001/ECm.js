@@ -145,7 +145,7 @@ router.post('/register_ECm', async (req, res) => {
         };
 
         if (data["PLANT"] !== "NOdata") {
-            neworder["SPEC"] = data["MATDATA"]["SPEC"][`TAV`];
+            neworder["SPEC"] = data["MATDATA"]["SPEC"][`EC`];
             neworder["BDATA"] = {
                 "Result": "",
             }
@@ -214,7 +214,7 @@ router.post('/ECm_SEND_DATA', async (req, res) => {
             outputQ = {
                 poid: input['Barcode'],
                 plant: check1[0][`PLANT`],
-                item: "TAV",
+                item: "EC",
                 value: check1[0][`BDATA`][`Result`],
             }
 
@@ -249,7 +249,7 @@ router.post('/ECm_SEND_DATA_ADJ', async (req, res) => {
             outputQ = {
                 poid: input['Barcode'],
                 plant: check1[0][`PLANT`],
-                item: "TAV",
+                item: "EC",
                 value: check1[0][`BDATA`][`Result`],
             }
             let resp = await axios.post('http://172.23.10.34:15000/valueinputadj', outputQ);
