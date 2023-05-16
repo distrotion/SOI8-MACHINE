@@ -18,11 +18,13 @@ let POWDERserver = 'POWDER_MASTER';
 let LIQUIDserver = 'LIQUID_MASTER';
 let NOXRUSTserver = 'NOXRUST_MASTER'
 let dbin = 'specification';
+let database = "SAP_MASTER";
+let masterdata = "master2";
 //
 
 router.post('/sap_test', async (req, res) => {
 
-  let check1 = await mongodb.find("SAP_MASTER", "master2", { MKMNR: { $regex: "20846" } });
+  let check1 = await mongodb.find(database, masterdata, { MKMNR: { $regex: "20846" } });
   console.log(check1)
   return res.json(check1);
 });
@@ -33,7 +35,7 @@ router.post('/sap_test_MAT', async (req, res) => {
   let input = req.body;
   //-------------------------------------
 
-  let check1 = await mongodb.find("SAP_MASTER", "master2", { MKMNR: { $regex: input['CP'] } });
+  let check1 = await mongodb.find(database, masterdata, { MKMNR: { $regex: input['CP'] } });
   console.log(check1)
   return res.json(check1);
 });
@@ -45,7 +47,7 @@ router.post('/sap_MAT', async (req, res) => {
   let input = req.body;
   //-------------------------------------
 
-  let check1 = await mongodb.find("SAP_MASTER", "master2", { Material: { $regex: input['MAT'] } });
+  let check1 = await mongodb.find(database, masterdata, { Material: { $regex: input['MAT'] } });
   console.log(check1)
   return res.json(check1);
 });
@@ -58,7 +60,7 @@ router.post('/qc_to_sap', async (req, res) => {
   let outputdata = {};
 
   if (input['MAT'] != undefined && input['PO'] != undefined) {
-    let check1 = await mongodb.find("SAP_MASTER", "master2", { Material: { $regex: input['MAT'] } });
+    let check1 = await mongodb.find(database, masterdata, { Material: { $regex: input['MAT'] } });
     // console.log(check1.length)
     if (check1.length > 0) {
       let matdata = check1.reverse();
@@ -102,28 +104,151 @@ router.post('/qc_to_sap', async (req, res) => {
         plant = 'NOXRUST'
 
       } else {
-        return res.json({"status":"no-data"});
+        return res.json({ "status": "no-data" });
       }
 
-      console.log(plant);
+      // console.log(plant);
 
-      let data = await mongodb.find(`${plant}dbMAIN`, 'MAIN', { "POID": `${MATCP+input['PO']}` });
+      let data = await mongodb.find(`${plant}dbMAIN`, 'MAIN', { "POID": `${MATCP + input['PO']}` });
+      let matsapdata = [];
       if (data.length > 0) {
-        console.log(data[0]['checklist']);
-        outputdata = {"checklist":data[0]['checklist']};
-        let matsapdata = [];
+        // console.log(data[0]['checklist']);
+        outputdata = { "data": data };
+        outputdata['checklist'] = data[0]['checklist'];
+
+
         for (let i = 0; i < matdata.length; i++) {
-          console.log(matdata[i][`MKMNR`].slice(-2));
-          console.log(matdata[i][`KURZTEXT`].toUpperCase());
-          matsapdata.push({"MKMNR":`0${matdata[i][`MKMNR`].slice(-2)}0`,"KURZTEXT":matdata[i][`KURZTEXT`].toUpperCase()})
+          // console.log(matdata[i][`MKMNR`].slice(-2));
+          // console.log(matdata[i][`KURZTEXT`].toUpperCase());
+          matsapdata.push({ "MKMNR": `0${matdata[i][`MKMNR`].slice(-2)}0`, "KURZTEXT": matdata[i][`KURZTEXT`].toUpperCase(), "qc": matdata[i][`qc`] ?? '' })
 
           // console.log(matdata[i][`SORTFELD`].toUpperCase());
         }
         outputdata['matsapdata'] = matsapdata;
       }
 
+      outputdata['satatus'] = 'NOK';
 
-     
+      for (let k = 0; k < matsapdata.length; k++) {
+        if(matsapdata[k]["qc"] === undefined || matsapdata[k]["qc"] === ""){
+      
+          break;
+        }
+
+        if (k < matsapdata.length - 1) {
+
+          if(matsapdata[k]["KURZTEXT"] ==`COLOR` || matsapdata[k]["KURZTEXT"] ==`APPEARANCE`){
+            let outputQ = {
+              "BAPI_NAME": "ZPPIN016_OUT",
+              "IMP_PRCTR": "1010"+outputdata["data"][0]["PO"],
+              "IMP_TEXT01": "AC",
+              "IMP_TEXT02": "",
+              "IMP_TEXT03": "",
+              "IMP_VALUE": 0,
+              "IMP_WERKS": matsapdata[k]["MKMNR"],
+              "LAST_DATE": "",
+              "LAST_TIME": "",
+              "TABLE_NAME": ""
+            }
+            console.log(outputQ);
+            // let resp = await axios.post('http://tp-portal.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', outputQ);
+            // if (resp.status == 200) {
+            //     var ret = resp.data
+            //     console.log(ret);
+            // }
+          }else{
+            let ans = 0
+            if(outputdata["data"][0][matsapdata[k]["qc"]]["T1Stc"] == 'lightgreen'){
+              ans = parseFloat(outputdata["data"][0][matsapdata[k]["qc"]]["T1"]);
+            }
+            if(outputdata["data"][0][matsapdata[k]["qc"]]["T2Stc"] == 'lightgreen'){
+              ans = parseFloat(outputdata["data"][0][matsapdata[k]["qc"]]["T2"]);
+            }
+            if(outputdata["data"][0][matsapdata[k]["qc"]]["T3Stc"] == 'lightgreen'){
+              ans = parseFloat(outputdata["data"][0][matsapdata[k]["qc"]]["T3"]);
+            }
+
+            let outputQ = {
+              "BAPI_NAME": "ZPPIN016_OUT",
+              "IMP_PRCTR": "1010"+outputdata["data"][0]["PO"],
+              "IMP_TEXT01": "AC",
+              "IMP_TEXT02": "",
+              "IMP_TEXT03": "",
+              "IMP_VALUE": ans,
+              "IMP_WERKS": matsapdata[k]["MKMNR"],
+              "LAST_DATE": "",
+              "LAST_TIME": "",
+              "TABLE_NAME": ""
+            }
+            console.log(outputQ);
+            
+            // let resp = await axios.post('http://tp-portal.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', outputQ);
+            // if (resp.status == 200) {
+            //     var ret = resp.data
+            //     console.log(ret);
+            // }
+          }
+
+        }else{
+          if(matsapdata[k]["KURZTEXT"] ==`COLOR` || matsapdata[k]["KURZTEXT"] ==`APPEARANCE`){
+            let outputQ = {
+              "BAPI_NAME": "ZPPIN016_OUT",
+              "IMP_PRCTR": "1010"+outputdata["data"][0]["PO"],
+              "IMP_TEXT01": "AC*",
+              "IMP_TEXT02": "",
+              "IMP_TEXT03": "",
+              "IMP_VALUE": 0,
+              "IMP_WERKS": matsapdata[k]["MKMNR"],
+              "LAST_DATE": "",
+              "LAST_TIME": "",
+              "TABLE_NAME": ""
+            }
+            console.log(outputQ);
+            outputdata['satatus'] = 'OK';
+            // let resp = await axios.post('http://tp-portal.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', outputQ);
+            // if (resp.status == 200) {
+            //     var ret = resp.data
+            //     console.log(ret);
+            // }
+          }else{
+            let ans = 0
+            if(outputdata["data"][0][matsapdata[k]["qc"]]["T1Stc"] == 'lightgreen'){
+              ans = parseFloat(outputdata["data"][0][matsapdata[k]["qc"]]["T1"]);
+            }
+            if(outputdata["data"][0][matsapdata[k]["qc"]]["T2Stc"] == 'lightgreen'){
+              ans = parseFloat(outputdata["data"][0][matsapdata[k]["qc"]]["T2"]);
+            }
+            if(outputdata["data"][0][matsapdata[k]["qc"]]["T3Stc"] == 'lightgreen'){
+              ans = parseFloat(outputdata["data"][0][matsapdata[k]["qc"]]["T3"]);
+            }
+
+            let outputQ = {
+              "BAPI_NAME": "ZPPIN016_OUT",
+              "IMP_PRCTR": "1010"+outputdata["data"][0]["PO"],
+              "IMP_TEXT01": "AC*",
+              "IMP_TEXT02": "",
+              "IMP_TEXT03": "",
+              "IMP_VALUE": ans,
+              "IMP_WERKS": matsapdata[k]["MKMNR"],
+              "LAST_DATE": "",
+              "LAST_TIME": "",
+              "TABLE_NAME": ""
+            }
+            console.log(outputQ);
+            outputdata['satatus'] = 'OK';
+            // let resp = await axios.post('http://tp-portal.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', outputQ);
+            // if (resp.status == 200) {
+            //     var ret = resp.data
+            //     console.log(ret);
+            // }
+          }
+        }
+
+
+      }
+
+
+
     }
   }
 
