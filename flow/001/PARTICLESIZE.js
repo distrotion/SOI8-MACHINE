@@ -279,7 +279,7 @@ router.post('/PARTICLESIZE_Result', async (req, res) => {
     if (input['Barcode'] != undefined && input['Barcode'] != '' && input['Result'] != undefined) {
 
         let check1 = await mongodb.find(DBins, colection, { "POID": input['Barcode'], "STATUS": "ACTIVE" });
-
+console.log(check1)
         if (check1.length > 0) {
             let ins = await mongodb.update(DBins, colection, { "POID": input['Barcode'], "STATUS": "ACTIVE" }, { $set: { "BDATA.Result": input['Result'] } });
             output = 'OK';
