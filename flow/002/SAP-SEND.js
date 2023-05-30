@@ -4,6 +4,7 @@ const router = express.Router();
 let mongodb = require('../../function/mongodb');
 let request = require('request');
 var axios = require('axios');
+let mssql = require('./../../function/mssql');
 
 //
 let DBins = 'INSdb'
@@ -130,17 +131,17 @@ router.post('/qc_to_sap', async (req, res) => {
       outputdata['satatus'] = 'NOK';
 
       for (let k = 0; k < matsapdata.length; k++) {
-        if(matsapdata[k]["qc"] === undefined || matsapdata[k]["qc"] === ""){
-      
+        if (matsapdata[k]["qc"] === undefined || matsapdata[k]["qc"] === "") {
+
           break;
         }
 
         if (k < matsapdata.length - 1) {
 
-          if(matsapdata[k]["KURZTEXT"] ==`COLOR` || matsapdata[k]["KURZTEXT"] ==`APPEARANCE`){
+          if (matsapdata[k]["KURZTEXT"] == `COLOR` || matsapdata[k]["KURZTEXT"] == `APPEARANCE`) {
             let outputQ = {
               "BAPI_NAME": "ZPPIN016_OUT",
-              "IMP_PRCTR": "1010"+outputdata["data"][0]["PO"],
+              "IMP_PRCTR": "1010" + outputdata["data"][0]["PO"],
               "IMP_TEXT01": "AC",
               "IMP_TEXT02": "",
               "IMP_TEXT03": "",
@@ -151,26 +152,32 @@ router.post('/qc_to_sap', async (req, res) => {
               "TABLE_NAME": ""
             }
             console.log(outputQ);
+
+            // let queryinsert = `Insert into [SOI8LOG].[dbo].[gosaplog] (mat,po,item,itemno,value,massage) values ('${MATCP}','${outputdata["data"][0]["PO"]}','${matsapdata[k]["KURZTEXT"]}','${matsapdata[k]["MKMNR"]}','${0}','${""}');`;
+            // let db = await mssql.qurey(queryinsert);
+            // if (db === `er`) {
+            //   return res.json({ "status": "nok", "note": "database error" });
+            // }
             // let resp = await axios.post('http://tp-portal.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', outputQ);
             // if (resp.status == 200) {
             //     var ret = resp.data
             //     console.log(ret);
             // }
-          }else{
+          } else {
             let ans = 0
-            if(outputdata["data"][0][matsapdata[k]["qc"]]["T1Stc"] == 'lightgreen'){
+            if (outputdata["data"][0][matsapdata[k]["qc"]]["T1Stc"] == 'lightgreen') {
               ans = parseFloat(outputdata["data"][0][matsapdata[k]["qc"]]["T1"]);
             }
-            if(outputdata["data"][0][matsapdata[k]["qc"]]["T2Stc"] == 'lightgreen'){
+            if (outputdata["data"][0][matsapdata[k]["qc"]]["T2Stc"] == 'lightgreen') {
               ans = parseFloat(outputdata["data"][0][matsapdata[k]["qc"]]["T2"]);
             }
-            if(outputdata["data"][0][matsapdata[k]["qc"]]["T3Stc"] == 'lightgreen'){
+            if (outputdata["data"][0][matsapdata[k]["qc"]]["T3Stc"] == 'lightgreen') {
               ans = parseFloat(outputdata["data"][0][matsapdata[k]["qc"]]["T3"]);
             }
 
             let outputQ = {
               "BAPI_NAME": "ZPPIN016_OUT",
-              "IMP_PRCTR": "1010"+outputdata["data"][0]["PO"],
+              "IMP_PRCTR": "1010" + outputdata["data"][0]["PO"],
               "IMP_TEXT01": "AC",
               "IMP_TEXT02": "",
               "IMP_TEXT03": "",
@@ -181,7 +188,13 @@ router.post('/qc_to_sap', async (req, res) => {
               "TABLE_NAME": ""
             }
             console.log(outputQ);
-            
+
+            // let queryinsert = `Insert into [SOI8LOG].[dbo].[gosaplog] (mat,po,item,itemno,value,massage) values ('${MATCP}','${outputdata["data"][0]["PO"]}','${matsapdata[k]["KURZTEXT"]}','${matsapdata[k]["MKMNR"]}','${ans}','${""}');`;
+            // let db = await mssql.qurey(queryinsert);
+            // if (db === `er`) {
+            //   return res.json({ "status": "nok", "note": "database error" });
+            // }
+
             // let resp = await axios.post('http://tp-portal.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', outputQ);
             // if (resp.status == 200) {
             //     var ret = resp.data
@@ -189,11 +202,11 @@ router.post('/qc_to_sap', async (req, res) => {
             // }
           }
 
-        }else{
-          if(matsapdata[k]["KURZTEXT"] ==`COLOR` || matsapdata[k]["KURZTEXT"] ==`APPEARANCE`){
+        } else {
+          if (matsapdata[k]["KURZTEXT"] == `COLOR` || matsapdata[k]["KURZTEXT"] == `APPEARANCE`) {
             let outputQ = {
               "BAPI_NAME": "ZPPIN016_OUT",
-              "IMP_PRCTR": "1010"+outputdata["data"][0]["PO"],
+              "IMP_PRCTR": "1010" + outputdata["data"][0]["PO"],
               "IMP_TEXT01": "AC*",
               "IMP_TEXT02": "",
               "IMP_TEXT03": "",
@@ -205,26 +218,31 @@ router.post('/qc_to_sap', async (req, res) => {
             }
             console.log(outputQ);
             outputdata['satatus'] = 'OK';
+            // let queryinsert = `Insert into [SOI8LOG].[dbo].[gosaplog] (mat,po,item,itemno,value,massage) values ('${MATCP}','${outputdata["data"][0]["PO"]}','${matsapdata[k]["KURZTEXT"]}','${matsapdata[k]["MKMNR"]}','${0}','${""}');`;
+            // let db = await mssql.qurey(queryinsert);
+            // if (db === `er`) {
+            //   return res.json({ "status": "nok", "note": "database error" });
+            // }
             // let resp = await axios.post('http://tp-portal.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', outputQ);
             // if (resp.status == 200) {
             //     var ret = resp.data
             //     console.log(ret);
             // }
-          }else{
+          } else {
             let ans = 0
-            if(outputdata["data"][0][matsapdata[k]["qc"]]["T1Stc"] == 'lightgreen'){
+            if (outputdata["data"][0][matsapdata[k]["qc"]]["T1Stc"] == 'lightgreen') {
               ans = parseFloat(outputdata["data"][0][matsapdata[k]["qc"]]["T1"]);
             }
-            if(outputdata["data"][0][matsapdata[k]["qc"]]["T2Stc"] == 'lightgreen'){
+            if (outputdata["data"][0][matsapdata[k]["qc"]]["T2Stc"] == 'lightgreen') {
               ans = parseFloat(outputdata["data"][0][matsapdata[k]["qc"]]["T2"]);
             }
-            if(outputdata["data"][0][matsapdata[k]["qc"]]["T3Stc"] == 'lightgreen'){
+            if (outputdata["data"][0][matsapdata[k]["qc"]]["T3Stc"] == 'lightgreen') {
               ans = parseFloat(outputdata["data"][0][matsapdata[k]["qc"]]["T3"]);
             }
 
             let outputQ = {
               "BAPI_NAME": "ZPPIN016_OUT",
-              "IMP_PRCTR": "1010"+outputdata["data"][0]["PO"],
+              "IMP_PRCTR": "1010" + outputdata["data"][0]["PO"],
               "IMP_TEXT01": "AC*",
               "IMP_TEXT02": "",
               "IMP_TEXT03": "",
@@ -235,6 +253,11 @@ router.post('/qc_to_sap', async (req, res) => {
               "TABLE_NAME": ""
             }
             console.log(outputQ);
+            // let queryinsert = `Insert into [SOI8LOG].[dbo].[gosaplog] (mat,po,item,itemno,value,massage) values ('${MATCP}','${outputdata["data"][0]["PO"]}','${matsapdata[k]["KURZTEXT"]}','${matsapdata[k]["MKMNR"]}','${ans}','${""}');`;
+            // let db = await mssql.qurey(queryinsert);
+            // if (db === `er`) {
+            //   return res.json({ "status": "nok", "note": "database error" });
+            // }
             outputdata['satatus'] = 'OK';
             // let resp = await axios.post('http://tp-portal.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', outputQ);
             // if (resp.status == 200) {
@@ -333,17 +356,17 @@ router.post('/qc_to_sap_go', async (req, res) => {
       outputdata['satatus'] = 'NOK';
 
       for (let k = 0; k < matsapdata.length; k++) {
-        if(matsapdata[k]["qc"] === undefined || matsapdata[k]["qc"] === ""){
-      
+        if (matsapdata[k]["qc"] === undefined || matsapdata[k]["qc"] === "") {
+
           break;
         }
 
         if (k < matsapdata.length - 1) {
 
-          if(matsapdata[k]["KURZTEXT"] ==`COLOR` || matsapdata[k]["KURZTEXT"] ==`APPEARANCE`){
+          if (matsapdata[k]["KURZTEXT"] == `COLOR` || matsapdata[k]["KURZTEXT"] == `APPEARANCE`) {
             let outputQ = {
               "BAPI_NAME": "ZPPIN016_OUT",
-              "IMP_PRCTR": "1010"+outputdata["data"][0]["PO"],
+              "IMP_PRCTR": "1010" + outputdata["data"][0]["PO"],
               "IMP_TEXT01": "AC",
               "IMP_TEXT02": "",
               "IMP_TEXT03": "",
@@ -356,24 +379,30 @@ router.post('/qc_to_sap_go', async (req, res) => {
             console.log(outputQ);
             let resp = await axios.post('http://tp-portal.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', outputQ);
             if (resp.status == 200) {
-                var ret = resp.data
-                console.log(ret);
+              var ret = resp.data
+              console.log(ret);
+
+              let queryinsert = `Insert into [SOI8LOG].[dbo].[gosaplog] (mat,po,item,itemno,value,massage) values ('${MATCP}','${outputdata["data"][0]["PO"]}','${matsapdata[k]["KURZTEXT"]}','${matsapdata[k]["MKMNR"]}','${0}','${ret[`ExportParameter`][`MESSAGE`]}');`;
+              let db = await mssql.qurey(queryinsert);
+              if (db === `er`) {
+                return res.json({ "status": "nok", "note": "database error" });
+              }
             }
-          }else{
+          } else {
             let ans = 0
-            if(outputdata["data"][0][matsapdata[k]["qc"]]["T1Stc"] == 'lightgreen'){
+            if (outputdata["data"][0][matsapdata[k]["qc"]]["T1Stc"] == 'lightgreen') {
               ans = parseFloat(outputdata["data"][0][matsapdata[k]["qc"]]["T1"]);
             }
-            if(outputdata["data"][0][matsapdata[k]["qc"]]["T2Stc"] == 'lightgreen'){
+            if (outputdata["data"][0][matsapdata[k]["qc"]]["T2Stc"] == 'lightgreen') {
               ans = parseFloat(outputdata["data"][0][matsapdata[k]["qc"]]["T2"]);
             }
-            if(outputdata["data"][0][matsapdata[k]["qc"]]["T3Stc"] == 'lightgreen'){
+            if (outputdata["data"][0][matsapdata[k]["qc"]]["T3Stc"] == 'lightgreen') {
               ans = parseFloat(outputdata["data"][0][matsapdata[k]["qc"]]["T3"]);
             }
 
             let outputQ = {
               "BAPI_NAME": "ZPPIN016_OUT",
-              "IMP_PRCTR": "1010"+outputdata["data"][0]["PO"],
+              "IMP_PRCTR": "1010" + outputdata["data"][0]["PO"],
               "IMP_TEXT01": "AC",
               "IMP_TEXT02": "",
               "IMP_TEXT03": "",
@@ -384,19 +413,25 @@ router.post('/qc_to_sap_go', async (req, res) => {
               "TABLE_NAME": ""
             }
             console.log(outputQ);
-            
+
             let resp = await axios.post('http://tp-portal.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', outputQ);
             if (resp.status == 200) {
-                var ret = resp.data
-                console.log(ret);
+              var ret = resp.data
+              console.log(ret);
+
+              let queryinsert = `Insert into [SOI8LOG].[dbo].[gosaplog] (mat,po,item,itemno,value,massage) values ('${MATCP}','${outputdata["data"][0]["PO"]}','${matsapdata[k]["KURZTEXT"]}','${matsapdata[k]["MKMNR"]}','${ans}','${ret[`ExportParameter`][`MESSAGE`]}');`;
+              let db = await mssql.qurey(queryinsert);
+              if (db === `er`) {
+                return res.json({ "status": "nok", "note": "database error" });
+              }
             }
           }
 
-        }else{
-          if(matsapdata[k]["KURZTEXT"] ==`COLOR` || matsapdata[k]["KURZTEXT"] ==`APPEARANCE`){
+        } else {
+          if (matsapdata[k]["KURZTEXT"] == `COLOR` || matsapdata[k]["KURZTEXT"] == `APPEARANCE`) {
             let outputQ = {
               "BAPI_NAME": "ZPPIN016_OUT",
-              "IMP_PRCTR": "1010"+outputdata["data"][0]["PO"],
+              "IMP_PRCTR": "1010" + outputdata["data"][0]["PO"],
               "IMP_TEXT01": "AC*",
               "IMP_TEXT02": "",
               "IMP_TEXT03": "",
@@ -410,24 +445,29 @@ router.post('/qc_to_sap_go', async (req, res) => {
             outputdata['satatus'] = 'OK';
             let resp = await axios.post('http://tp-portal.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', outputQ);
             if (resp.status == 200) {
-                var ret = resp.data
-                console.log(ret);
+              var ret = resp.data
+              console.log(ret);
+              let queryinsert = `Insert into [SOI8LOG].[dbo].[gosaplog] (mat,po,item,itemno,value,massage) values ('${MATCP}','${outputdata["data"][0]["PO"]}','${matsapdata[k]["KURZTEXT"]}','${matsapdata[k]["MKMNR"]}','${0}','${ret[`ExportParameter`][`MESSAGE`]}');`;
+              let db = await mssql.qurey(queryinsert);
+              if (db === `er`) {
+                return res.json({ "status": "nok", "note": "database error" });
+              }
             }
-          }else{
+          } else {
             let ans = 0
-            if(outputdata["data"][0][matsapdata[k]["qc"]]["T1Stc"] == 'lightgreen'){
+            if (outputdata["data"][0][matsapdata[k]["qc"]]["T1Stc"] == 'lightgreen') {
               ans = parseFloat(outputdata["data"][0][matsapdata[k]["qc"]]["T1"]);
             }
-            if(outputdata["data"][0][matsapdata[k]["qc"]]["T2Stc"] == 'lightgreen'){
+            if (outputdata["data"][0][matsapdata[k]["qc"]]["T2Stc"] == 'lightgreen') {
               ans = parseFloat(outputdata["data"][0][matsapdata[k]["qc"]]["T2"]);
             }
-            if(outputdata["data"][0][matsapdata[k]["qc"]]["T3Stc"] == 'lightgreen'){
+            if (outputdata["data"][0][matsapdata[k]["qc"]]["T3Stc"] == 'lightgreen') {
               ans = parseFloat(outputdata["data"][0][matsapdata[k]["qc"]]["T3"]);
             }
 
             let outputQ = {
               "BAPI_NAME": "ZPPIN016_OUT",
-              "IMP_PRCTR": "1010"+outputdata["data"][0]["PO"],
+              "IMP_PRCTR": "1010" + outputdata["data"][0]["PO"],
               "IMP_TEXT01": "AC*",
               "IMP_TEXT02": "",
               "IMP_TEXT03": "",
@@ -441,8 +481,13 @@ router.post('/qc_to_sap_go', async (req, res) => {
             outputdata['satatus'] = 'OK';
             let resp = await axios.post('http://tp-portal.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', outputQ);
             if (resp.status == 200) {
-                var ret = resp.data
-                console.log(ret);
+              var ret = resp.data
+              console.log(ret);
+              let queryinsert = `Insert into [SOI8LOG].[dbo].[gosaplog] (mat,po,item,itemno,value,massage) values ('${MATCP}','${outputdata["data"][0]["PO"]}','${matsapdata[k]["KURZTEXT"]}','${matsapdata[k]["MKMNR"]}','${ans}','${ret[`ExportParameter`][`MESSAGE`]}');`;
+              let db = await mssql.qurey(queryinsert);
+              if (db === `er`) {
+                return res.json({ "status": "nok", "note": "database error" });
+              }
             }
           }
         }

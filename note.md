@@ -308,6 +308,17 @@ router.post('/KARL_Result', async (req, res) => {
   });
 
 
+  date
+  mat
+  po
+  item
+  itemno
+  value
+  massage
+
+  `Insert into [SOI8LOG].[dbo].[gosaplog] (mat,po,item,itemno,value,massage) values (${},${},${},${},${},${});`
+
+
 
 
 
