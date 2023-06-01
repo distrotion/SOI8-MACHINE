@@ -494,9 +494,14 @@ router.post('/qc_to_sap_go', async (req, res) => {
 
 
       }
-
+      if(outputdata['satatus'] === 'OK'){
+        let ins = await mongodb.update(`${plant}dbMAIN`, 'MAIN', { "POID": `${input['MAT'] + input['PO']}`}, { $set: { "SAPSTATUS": "OK" } });
+      }
     }
+    
   }
+
+ 
 
   return res.json(outputdata);
 });
