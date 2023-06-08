@@ -138,7 +138,7 @@ router.post('/qc_to_sap', async (req, res) => {
 
         if (k < matsapdata.length - 1) {
 
-          if (matsapdata[k]["KURZTEXT"] == `COLOR` || matsapdata[k]["KURZTEXT"] == `APPEARANCE`) {
+          if (matsapdata[k]["qc"] == `COLOR` || matsapdata[k]["qc"] == `APPEARANCE`) {
             let outputQ = {
               "BAPI_NAME": "ZPPIN016_OUT",
               "IMP_PRCTR": "1010" + outputdata["data"][0]["PO"],
@@ -203,7 +203,7 @@ router.post('/qc_to_sap', async (req, res) => {
           }
 
         } else {
-          if (matsapdata[k]["KURZTEXT"] == `COLOR` || matsapdata[k]["KURZTEXT"] == `APPEARANCE`) {
+          if (matsapdata[k]["qc"] == `COLOR` || matsapdata[k]["qc"] == `APPEARANCE`) {
             let outputQ = {
               "BAPI_NAME": "ZPPIN016_OUT",
               "IMP_PRCTR": "1010" + outputdata["data"][0]["PO"],
@@ -287,7 +287,7 @@ router.post('/qc_to_sap_go', async (req, res) => {
 
   if (input['MAT'] != undefined && input['PO'] != undefined) {
     let check1 = await mongodb.find(database, masterdata, { Material: { $regex: input['MAT'] } });
-    // console.log(check1.length)
+    console.log("------>><<")
     if (check1.length > 0) {
       let matdata = check1.reverse();
       let MATCP = input['MAT'];
@@ -335,6 +335,12 @@ router.post('/qc_to_sap_go', async (req, res) => {
 
       // console.log(plant);
 
+      let dataD = await mongodb.find(`${plant}dbMAIN`, 'MAIN', { "POID": `${MATCP + input['PO']}`, "SAPSTATUS": "OK" });
+
+      if (dataD.length > 0) {
+        return res.json({ "msg": "SAP HAVE SENT", "satatus": "NOK" });
+      }
+
       let data = await mongodb.find(`${plant}dbMAIN`, 'MAIN', { "POID": `${MATCP + input['PO']}` });
       let matsapdata = [];
       if (data.length > 0) {
@@ -363,7 +369,7 @@ router.post('/qc_to_sap_go', async (req, res) => {
 
         if (k < matsapdata.length - 1) {
 
-          if (matsapdata[k]["KURZTEXT"] == `COLOR` || matsapdata[k]["KURZTEXT"] == `APPEARANCE`) {
+          if (matsapdata[k]["qc"] == `COLOR` || matsapdata[k]["qc"] == `APPEARANCE`) {
             let outputQ = {
               "BAPI_NAME": "ZPPIN016_OUT",
               "IMP_PRCTR": "1010" + outputdata["data"][0]["PO"],
@@ -428,7 +434,7 @@ router.post('/qc_to_sap_go', async (req, res) => {
           }
 
         } else {
-          if (matsapdata[k]["KURZTEXT"] == `COLOR` || matsapdata[k]["KURZTEXT"] == `APPEARANCE`) {
+          if (matsapdata[k]["qc"] == `COLOR` || matsapdata[k]["qc"] == `APPEARANCE`) {
             let outputQ = {
               "BAPI_NAME": "ZPPIN016_OUT",
               "IMP_PRCTR": "1010" + outputdata["data"][0]["PO"],
@@ -494,14 +500,14 @@ router.post('/qc_to_sap_go', async (req, res) => {
 
 
       }
-      if(outputdata['satatus'] === 'OK'){
-        let ins = await mongodb.update(`${plant}dbMAIN`, 'MAIN', { "POID": `${input['MAT'] + input['PO']}`}, { $set: { "SAPSTATUS": "OK" } });
+      if (outputdata['satatus'] === 'OK') {
+        let ins = await mongodb.update(`${plant}dbMAIN`, 'MAIN', { "POID": `${input['MAT'] + input['PO']}` }, { $set: { "SAPSTATUS": "OK" } });
       }
     }
-    
+
   }
 
- 
+
 
   return res.json(outputdata);
 });
@@ -509,7 +515,7 @@ router.post('/qc_to_sap_go', async (req, res) => {
 
 
 
-router.post('/qc_to_sap_CHECK', async (req, res) => {
+router.post('/qc_to_sap_check_n_go', async (req, res) => {
   //-------------------------------------
   console.log(req.body);
   let input = req.body;
@@ -567,6 +573,14 @@ router.post('/qc_to_sap_CHECK', async (req, res) => {
 
       // console.log(plant);
 
+      let dataD = await mongodb.find(`${plant}dbMAIN`, 'MAIN', { "POID": `${MATCP + input['PO']}`, "SAPSTATUS": "OK" });
+
+      if (dataD.length > 0) {
+        return res.json({ "msg": "SAP HAVE SENT", "satatus": "NOK" });
+      }
+
+      console.log("-----------------------");
+
       let data = await mongodb.find(`${plant}dbMAIN`, 'MAIN', { "POID": `${MATCP + input['PO']}` });
       let matsapdata = [];
       if (data.length > 0) {
@@ -598,7 +612,7 @@ router.post('/qc_to_sap_CHECK', async (req, res) => {
 
         if (k < matsapdata.length - 1) {
 
-          if (matsapdata[k]["KURZTEXT"] == `COLOR` || matsapdata[k]["KURZTEXT"] == `APPEARANCE`) {
+          if (matsapdata[k]["qc"] == `COLOR` || matsapdata[k]["qc"] == `APPEARANCE`) {
             let outputQ = {
               "BAPI_NAME": "ZPPIN016_OUT",
               "IMP_PRCTR": "1010" + outputdata["data"][0]["PO"],
@@ -611,7 +625,7 @@ router.post('/qc_to_sap_CHECK', async (req, res) => {
               "LAST_TIME": "",
               "TABLE_NAME": ""
             }
-            console.log(outputQ);
+            // console.log(outputQ);
           } else {
             let ans = 0
             if (outputdata["data"][0][matsapdata[k]["qc"]]["T1Stc"] == 'lightgreen') {
@@ -636,11 +650,11 @@ router.post('/qc_to_sap_CHECK', async (req, res) => {
               "LAST_TIME": "",
               "TABLE_NAME": ""
             }
-            console.log(outputQ);
+            // console.log(outputQ);
           }
 
         } else {
-          if (matsapdata[k]["KURZTEXT"] == `COLOR` || matsapdata[k]["KURZTEXT"] == `APPEARANCE`) {
+          if (matsapdata[k]["qc"] == `COLOR` || matsapdata[k]["qc"] == `APPEARANCE`) {
             let outputQ = {
               "BAPI_NAME": "ZPPIN016_OUT",
               "IMP_PRCTR": "1010" + outputdata["data"][0]["PO"],
@@ -653,7 +667,7 @@ router.post('/qc_to_sap_CHECK', async (req, res) => {
               "LAST_TIME": "",
               "TABLE_NAME": ""
             }
-            console.log(outputQ);
+            // console.log(outputQ);
             outputdata['satatus'] = 'OK';
             outputdataC['satatus'] = 'OK';
           } else {
@@ -680,7 +694,7 @@ router.post('/qc_to_sap_CHECK', async (req, res) => {
               "LAST_TIME": "",
               "TABLE_NAME": ""
             }
-            console.log(outputQ);
+            // console.log(outputQ);
             outputdata['satatus'] = 'OK';
             outputdataC['satatus'] = 'OK';
 
@@ -691,9 +705,18 @@ router.post('/qc_to_sap_CHECK', async (req, res) => {
     }
   }
 
-  //matsapdata.length
+  //matsapdata.length checklistcount
 
-  
+  if (outputdataC['satatus'] === 'OK' && outputdataC['sapcount'] === outputdataC['checklistcount']) {
+
+    let resp = await axios.post('http://localhost:15010/qc_to_sap_go', { "MAT": input['MAT'], "PO": input['PO'] });
+    if (resp.status == 200) {
+      var ret = resp.data
+      console.log(ret);
+     
+    }
+
+  }
 
   return res.json(outputdataC);
 });
