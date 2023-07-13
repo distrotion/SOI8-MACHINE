@@ -121,7 +121,8 @@ router.post('/qc_to_sap', async (req, res) => {
         for (let i = 0; i < matdata.length; i++) {
           // console.log(matdata[i][`MKMNR`].slice(-2));
           // console.log(matdata[i][`KURZTEXT`].toUpperCase());
-          matsapdata.push({ "MKMNR": `0${matdata[i][`MKMNR`].slice(-2)}0`, "KURZTEXT": matdata[i][`KURZTEXT`].toUpperCase(), "qc": matdata[i][`qc`] ?? '' })
+          // matsapdata.push({ "MKMNR": `0${matdata[i][`MKMNR`].slice(-2)}0`, "KURZTEXT": matdata[i][`KURZTEXT`].toUpperCase(), "qc": matdata[i][`qc`] ?? '' })
+          matsapdata.push({ "MKMNRORIGINAL": `${matdata[i][`MKMNR`]}`, "MKMNR": `0${matdata[i][`MKMNR`].slice(-2)}0`, "KURZTEXT": matdata[i][`KURZTEXT`].toUpperCase(), "qc": matdata[i][`qc`] ?? '' })
 
           // console.log(matdata[i][`SORTFELD`].toUpperCase());
         }
@@ -143,7 +144,7 @@ router.post('/qc_to_sap', async (req, res) => {
               "BAPI_NAME": "ZPPIN016_OUT",
               "IMP_PRCTR": "1010" + outputdata["data"][0]["PO"],
               "IMP_TEXT01": "AC",
-              "IMP_TEXT02": "",
+              "IMP_TEXT02": matsapdata[k]["MKMNRORIGINAL"],
               "IMP_TEXT03": "",
               "IMP_VALUE": 0,
               "IMP_WERKS": matsapdata[k]["MKMNR"],
@@ -179,7 +180,7 @@ router.post('/qc_to_sap', async (req, res) => {
               "BAPI_NAME": "ZPPIN016_OUT",
               "IMP_PRCTR": "1010" + outputdata["data"][0]["PO"],
               "IMP_TEXT01": "AC",
-              "IMP_TEXT02": "",
+              "IMP_TEXT02": matsapdata[k]["MKMNRORIGINAL"],
               "IMP_TEXT03": "",
               "IMP_VALUE": `${ans}`,
               "IMP_WERKS": matsapdata[k]["MKMNR"],
@@ -208,7 +209,7 @@ router.post('/qc_to_sap', async (req, res) => {
               "BAPI_NAME": "ZPPIN016_OUT",
               "IMP_PRCTR": "1010" + outputdata["data"][0]["PO"],
               "IMP_TEXT01": "AC*",
-              "IMP_TEXT02": "",
+              "IMP_TEXT02": matsapdata[k]["MKMNRORIGINAL"],
               "IMP_TEXT03": "",
               "IMP_VALUE": 0,
               "IMP_WERKS": matsapdata[k]["MKMNR"],
@@ -244,7 +245,7 @@ router.post('/qc_to_sap', async (req, res) => {
               "BAPI_NAME": "ZPPIN016_OUT",
               "IMP_PRCTR": "1010" + outputdata["data"][0]["PO"],
               "IMP_TEXT01": "AC*",
-              "IMP_TEXT02": "",
+              "IMP_TEXT02": matsapdata[k]["MKMNRORIGINAL"],
               "IMP_TEXT03": "",
               "IMP_VALUE": `${ans}`,
               "IMP_WERKS": matsapdata[k]["MKMNR"],
@@ -352,7 +353,8 @@ router.post('/qc_to_sap_go', async (req, res) => {
         for (let i = 0; i < matdata.length; i++) {
           // console.log(matdata[i][`MKMNR`].slice(-2));
           // console.log(matdata[i][`KURZTEXT`].toUpperCase());
-          matsapdata.push({ "MKMNR": `0${matdata[i][`MKMNR`].slice(-2)}0`, "KURZTEXT": matdata[i][`KURZTEXT`].toUpperCase(), "qc": matdata[i][`qc`] ?? '' })
+          // matsapdata.push({ "MKMNR": `0${matdata[i][`MKMNR`].slice(-2)}0`, "KURZTEXT": matdata[i][`KURZTEXT`].toUpperCase(), "qc": matdata[i][`qc`] ?? '' })
+          matsapdata.push({ "MKMNRORIGINAL": `${matdata[i][`MKMNR`]}`, "MKMNR": `0${matdata[i][`MKMNR`].slice(-2)}0`, "KURZTEXT": matdata[i][`KURZTEXT`].toUpperCase(), "qc": matdata[i][`qc`] ?? '' })
 
           // console.log(matdata[i][`SORTFELD`].toUpperCase());
         }
@@ -374,7 +376,7 @@ router.post('/qc_to_sap_go', async (req, res) => {
               "BAPI_NAME": "ZPPIN016_OUT",
               "IMP_PRCTR": "1010" + outputdata["data"][0]["PO"],
               "IMP_TEXT01": "AC",
-              "IMP_TEXT02": "",
+              "IMP_TEXT02": matsapdata[k]["MKMNRORIGINAL"],
               "IMP_TEXT03": "",
               "IMP_VALUE": 0,
               "IMP_WERKS": matsapdata[k]["MKMNR"],
@@ -388,7 +390,7 @@ router.post('/qc_to_sap_go', async (req, res) => {
               var ret = resp.data
               console.log(ret);
 
-              let queryinsert = `Insert into [SOI8LOG].[dbo].[gosaplog] (mat,po,item,itemno,value,massage) values ('${MATCP}','${outputdata["data"][0]["PO"]}','${matsapdata[k]["KURZTEXT"]}','${matsapdata[k]["MKMNR"]}','${0}','${ret[`ExportParameter`][`MESSAGE`]}');`;
+              let queryinsert = `Insert into [SOI8LOG].[dbo].[gosaplog] (mat,po,item,itemno,value,massage,masterins) values ('${MATCP}','${outputdata["data"][0]["PO"]}','${matsapdata[k]["KURZTEXT"]}','${matsapdata[k]["MKMNR"]}','${0}','${ret[`ExportParameter`][`MESSAGE`]}','${matsapdata[k]["MKMNRORIGINAL"]}');`;
               let db = await mssql.qurey(queryinsert);
               if (db === `er`) {
                 return res.json({ "status": "nok", "note": "database error" });
@@ -410,7 +412,7 @@ router.post('/qc_to_sap_go', async (req, res) => {
               "BAPI_NAME": "ZPPIN016_OUT",
               "IMP_PRCTR": "1010" + outputdata["data"][0]["PO"],
               "IMP_TEXT01": "AC",
-              "IMP_TEXT02": "",
+              "IMP_TEXT02": matsapdata[k]["MKMNRORIGINAL"],
               "IMP_TEXT03": "",
               "IMP_VALUE": `${ans}`,
               "IMP_WERKS": matsapdata[k]["MKMNR"],
@@ -425,7 +427,7 @@ router.post('/qc_to_sap_go', async (req, res) => {
               var ret = resp.data
               console.log(ret);
 
-              let queryinsert = `Insert into [SOI8LOG].[dbo].[gosaplog] (mat,po,item,itemno,value,massage) values ('${MATCP}','${outputdata["data"][0]["PO"]}','${matsapdata[k]["KURZTEXT"]}','${matsapdata[k]["MKMNR"]}','${ans}','${ret[`ExportParameter`][`MESSAGE`]}');`;
+              let queryinsert = `Insert into [SOI8LOG].[dbo].[gosaplog] (mat,po,item,itemno,value,massage,masterins) values ('${MATCP}','${outputdata["data"][0]["PO"]}','${matsapdata[k]["KURZTEXT"]}','${matsapdata[k]["MKMNR"]}','${ans}','${ret[`ExportParameter`][`MESSAGE`]}','${matsapdata[k]["MKMNRORIGINAL"]}');`;
               let db = await mssql.qurey(queryinsert);
               if (db === `er`) {
                 return res.json({ "status": "nok", "note": "database error" });
@@ -439,7 +441,7 @@ router.post('/qc_to_sap_go', async (req, res) => {
               "BAPI_NAME": "ZPPIN016_OUT",
               "IMP_PRCTR": "1010" + outputdata["data"][0]["PO"],
               "IMP_TEXT01": "AC*",
-              "IMP_TEXT02": "",
+              "IMP_TEXT02": matsapdata[k]["MKMNRORIGINAL"],
               "IMP_TEXT03": "",
               "IMP_VALUE": 0,
               "IMP_WERKS": matsapdata[k]["MKMNR"],
@@ -453,7 +455,7 @@ router.post('/qc_to_sap_go', async (req, res) => {
             if (resp.status == 200) {
               var ret = resp.data
               console.log(ret);
-              let queryinsert = `Insert into [SOI8LOG].[dbo].[gosaplog] (mat,po,item,itemno,value,massage) values ('${MATCP}','${outputdata["data"][0]["PO"]}','${matsapdata[k]["KURZTEXT"]}','${matsapdata[k]["MKMNR"]}','${0}','${ret[`ExportParameter`][`MESSAGE`]}');`;
+              let queryinsert = `Insert into [SOI8LOG].[dbo].[gosaplog] (mat,po,item,itemno,value,massage,masterins) values ('${MATCP}','${outputdata["data"][0]["PO"]}','${matsapdata[k]["KURZTEXT"]}','${matsapdata[k]["MKMNR"]}','${0}','${ret[`ExportParameter`][`MESSAGE`]}','${matsapdata[k]["MKMNRORIGINAL"]}');`;
               let db = await mssql.qurey(queryinsert);
               if (db === `er`) {
                 return res.json({ "status": "nok", "note": "database error" });
@@ -475,7 +477,7 @@ router.post('/qc_to_sap_go', async (req, res) => {
               "BAPI_NAME": "ZPPIN016_OUT",
               "IMP_PRCTR": "1010" + outputdata["data"][0]["PO"],
               "IMP_TEXT01": "AC*",
-              "IMP_TEXT02": "",
+              "IMP_TEXT02": matsapdata[k]["MKMNRORIGINAL"],
               "IMP_TEXT03": "",
               "IMP_VALUE": `${ans}`,
               "IMP_WERKS": matsapdata[k]["MKMNR"],
@@ -489,7 +491,7 @@ router.post('/qc_to_sap_go', async (req, res) => {
             if (resp.status == 200) {
               var ret = resp.data
               console.log(ret);
-              let queryinsert = `Insert into [SOI8LOG].[dbo].[gosaplog] (mat,po,item,itemno,value,massage) values ('${MATCP}','${outputdata["data"][0]["PO"]}','${matsapdata[k]["KURZTEXT"]}','${matsapdata[k]["MKMNR"]}','${ans}','${ret[`ExportParameter`][`MESSAGE`]}');`;
+              let queryinsert = `Insert into [SOI8LOG].[dbo].[gosaplog] (mat,po,item,itemno,value,massage,masterins) values ('${MATCP}','${outputdata["data"][0]["PO"]}','${matsapdata[k]["KURZTEXT"]}','${matsapdata[k]["MKMNR"]}','${ans}','${ret[`ExportParameter`][`MESSAGE`]}','${matsapdata[k]["MKMNRORIGINAL"]}');`;
               let db = await mssql.qurey(queryinsert);
               if (db === `er`) {
                 return res.json({ "status": "nok", "note": "database error" });
@@ -594,7 +596,8 @@ router.post('/qc_to_sap_check_n_go', async (req, res) => {
         for (let i = 0; i < matdata.length; i++) {
           // console.log(matdata[i][`MKMNR`].slice(-2));
           // console.log(matdata[i][`KURZTEXT`].toUpperCase());
-          matsapdata.push({ "MKMNR": `0${matdata[i][`MKMNR`].slice(-2)}0`, "KURZTEXT": matdata[i][`KURZTEXT`].toUpperCase(), "qc": matdata[i][`qc`] ?? '' })
+          // matsapdata.push({ "MKMNR": `0${matdata[i][`MKMNR`].slice(-2)}0`, "KURZTEXT": matdata[i][`KURZTEXT`].toUpperCase(), "qc": matdata[i][`qc`] ?? '' })
+          matsapdata.push({ "MKMNRORIGINAL": `${matdata[i][`MKMNR`]}`, "MKMNR": `0${matdata[i][`MKMNR`].slice(-2)}0`, "KURZTEXT": matdata[i][`KURZTEXT`].toUpperCase(), "qc": matdata[i][`qc`] ?? '' })
 
           // console.log(matdata[i][`SORTFELD`].toUpperCase());
         }
@@ -617,7 +620,7 @@ router.post('/qc_to_sap_check_n_go', async (req, res) => {
               "BAPI_NAME": "ZPPIN016_OUT",
               "IMP_PRCTR": "1010" + outputdata["data"][0]["PO"],
               "IMP_TEXT01": "AC",
-              "IMP_TEXT02": "",
+              "IMP_TEXT02": matsapdata[k]["MKMNRORIGINAL"],
               "IMP_TEXT03": "",
               "IMP_VALUE": 0,
               "IMP_WERKS": matsapdata[k]["MKMNR"],
@@ -642,7 +645,7 @@ router.post('/qc_to_sap_check_n_go', async (req, res) => {
               "BAPI_NAME": "ZPPIN016_OUT",
               "IMP_PRCTR": "1010" + outputdata["data"][0]["PO"],
               "IMP_TEXT01": "AC",
-              "IMP_TEXT02": "",
+              "IMP_TEXT02": matsapdata[k]["MKMNRORIGINAL"],
               "IMP_TEXT03": "",
               "IMP_VALUE": `${ans}`,
               "IMP_WERKS": matsapdata[k]["MKMNR"],
@@ -659,7 +662,7 @@ router.post('/qc_to_sap_check_n_go', async (req, res) => {
               "BAPI_NAME": "ZPPIN016_OUT",
               "IMP_PRCTR": "1010" + outputdata["data"][0]["PO"],
               "IMP_TEXT01": "AC*",
-              "IMP_TEXT02": "",
+              "IMP_TEXT02": matsapdata[k]["MKMNRORIGINAL"],
               "IMP_TEXT03": "",
               "IMP_VALUE": 0,
               "IMP_WERKS": matsapdata[k]["MKMNR"],
@@ -686,7 +689,7 @@ router.post('/qc_to_sap_check_n_go', async (req, res) => {
               "BAPI_NAME": "ZPPIN016_OUT",
               "IMP_PRCTR": "1010" + outputdata["data"][0]["PO"],
               "IMP_TEXT01": "AC*",
-              "IMP_TEXT02": "",
+              "IMP_TEXT02": matsapdata[k]["MKMNRORIGINAL"],
               "IMP_TEXT03": "",
               "IMP_VALUE": `${ans}`,
               "IMP_WERKS": matsapdata[k]["MKMNR"],
