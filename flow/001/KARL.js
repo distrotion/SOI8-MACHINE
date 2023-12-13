@@ -295,7 +295,10 @@ router.post('/KARL_Result', async (req, res) => {
 });
 
 router.post('/KARL_SHIP_DATA', async (req, res) => {
-
+    //-------------------------------------
+    console.log(req.body);
+    let input = req.body;
+    //-------------------------------------
     console.log("--KARL_SHIP_DATA--");
     let output = '';
     if (input['DATA'] != undefined) {
