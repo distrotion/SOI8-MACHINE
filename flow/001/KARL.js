@@ -24,214 +24,214 @@ let dbin = 'specification';
 
 router.post('/register_KARL', async (req, res) => {
 
-  //-------------------------------------
-  console.log(req.body);
-  let input = req.body;
-  //-------------------------------------
-  let output = `NOK`;
-  //InstrumentID
+    //-------------------------------------
+    console.log(req.body);
+    let input = req.body;
+    //-------------------------------------
+    let output = `NOK`;
+    //InstrumentID
 
-  if (input['Barcode'] != undefined && input['UserID'] != undefined && input['InstrumentID'] != undefined) {
+    if (input['Barcode'] != undefined && input['UserID'] != undefined && input['InstrumentID'] != undefined) {
 
-      input['PO'] = input['Barcode'];
+        input['PO'] = input['Barcode'];
 
-      let MATCP = input['PO'].substring(0, 8);
-      let PO = input['PO'].substring(12, 18);
+        let MATCP = input['PO'].substring(0, 8);
+        let PO = input['PO'].substring(12, 18);
 
-      let PREMIX = await mongodb.find(PREMIXserver, dbin, { "MATNO": MATCP });
-      let COILCOATING = await mongodb.find(COILCOATINGserver, dbin, { "MATNO": MATCP });
-      let HYDROPHILIC = await mongodb.find(HYDROPHILICserver, dbin, { "MATNO": MATCP });
-      let PLX = await mongodb.find(PLXserver, dbin, { "MATNO": MATCP });
-      let TRITRATING = await mongodb.find(TRITRATINGserver, dbin, { "MATNO": MATCP });
-      let POWDER = await mongodb.find(POWDERserver, dbin, { "MATNO": MATCP });
-      let LIQUID = await mongodb.find(LIQUIDserver, dbin, { "MATNO": MATCP });
-      let NOXRUST = await mongodb.find(NOXRUSTserver, dbin, { "MATNO": MATCP });
+        let PREMIX = await mongodb.find(PREMIXserver, dbin, { "MATNO": MATCP });
+        let COILCOATING = await mongodb.find(COILCOATINGserver, dbin, { "MATNO": MATCP });
+        let HYDROPHILIC = await mongodb.find(HYDROPHILICserver, dbin, { "MATNO": MATCP });
+        let PLX = await mongodb.find(PLXserver, dbin, { "MATNO": MATCP });
+        let TRITRATING = await mongodb.find(TRITRATINGserver, dbin, { "MATNO": MATCP });
+        let POWDER = await mongodb.find(POWDERserver, dbin, { "MATNO": MATCP });
+        let LIQUID = await mongodb.find(LIQUIDserver, dbin, { "MATNO": MATCP });
+        let NOXRUST = await mongodb.find(NOXRUSTserver, dbin, { "MATNO": MATCP });
 
-      let data = {
-          "PLANT": "NOdata",
-          "STATUS": "ORDER AGAIN"
-      };
+        let data = {
+            "PLANT": "NOdata",
+            "STATUS": "ORDER AGAIN"
+        };
 
-      if (TRITRATING.length > 0) {
-          data = {
-              "MATCP": MATCP,
-              "PO": PO,
-              "PLANT": "TRITRATING",
-              "MASTERdb": TRITRATINGserver,
-              "MATDATA": TRITRATING[0],
-              "ProductName": TRITRATING[0]['ProductName'],
-          };
-      } else if (COILCOATING.length > 0) {
-          data = {
-              "MATCP": MATCP,
-              "PO": PO,
-              "PLANT": "COILCOATING",
-              "MASTERdb": COILCOATINGserver,
-              "MATDATA": COILCOATING[0],
-              "ProductName": COILCOATING[0]['ProductName'],
-          };
-      } else if (HYDROPHILIC.length > 0) {
-          data = {
-              "MATCP": MATCP,
-              "PO": PO,
-              "PLANT": "HYDROPHILIC",
-              "MASTERdb": HYDROPHILICserver,
-              "MATDATA": HYDROPHILIC[0],
-              "ProductName": HYDROPHILIC[0]['ProductName'],
-          };
-      } else if (PLX.length > 0) {
-          data = {
-              "MATCP": MATCP,
-              "PO": PO,
-              "PLANT": "PLX",
-              "MASTERdb": PLXserver,
-              "MATDATA": PLX[0],
-              "ProductName": PLX[0]['ProductName'],
-          };
-      } else if (PREMIX.length > 0) {
-          data = {
-              "MATCP": MATCP,
-              "PO": PO,
-              "PLANT": "PREMIX",
-              "MASTERdb": PREMIXserver,
-              "MATDATA": PREMIX[0],
-              "ProductName": PREMIX[0]['ProductName'],
-          };
-      } else if (POWDER.length > 0) {
-          data = {
-              "MATCP": MATCP,
-              "PO": PO,
-              "PLANT": "POWDER",
-              "MASTERdb": POWDERserver,
-              "MATDATA": POWDER[0],
-              "ProductName": POWDER[0]['ProductName'],
-          };
-      } else if (LIQUID.length > 0) {
-          data = {
-              "MATCP": MATCP,
-              "PO": PO,
-              "PLANT": "LIQUID",
-              "MASTERdb": LIQUIDserver,
-              "MATDATA": LIQUID[0],
-              "ProductName": LIQUID[0]['ProductName'],
-          };
-      } else if (NOXRUST.length > 0) {
-          data = {
-              "MATCP": MATCP,
-              "PO": PO,
-              "PLANT": "NOXRUST",
-              "MASTERdb": NOXRUSTserver,
-              "MATDATA": NOXRUST[0],
-              "ProductName": NOXRUST[0]['ProductName'],
-          };
-      } else {
-          output = 'The MAT NO. Incorrect';
-      }
+        if (TRITRATING.length > 0) {
+            data = {
+                "MATCP": MATCP,
+                "PO": PO,
+                "PLANT": "TRITRATING",
+                "MASTERdb": TRITRATINGserver,
+                "MATDATA": TRITRATING[0],
+                "ProductName": TRITRATING[0]['ProductName'],
+            };
+        } else if (COILCOATING.length > 0) {
+            data = {
+                "MATCP": MATCP,
+                "PO": PO,
+                "PLANT": "COILCOATING",
+                "MASTERdb": COILCOATINGserver,
+                "MATDATA": COILCOATING[0],
+                "ProductName": COILCOATING[0]['ProductName'],
+            };
+        } else if (HYDROPHILIC.length > 0) {
+            data = {
+                "MATCP": MATCP,
+                "PO": PO,
+                "PLANT": "HYDROPHILIC",
+                "MASTERdb": HYDROPHILICserver,
+                "MATDATA": HYDROPHILIC[0],
+                "ProductName": HYDROPHILIC[0]['ProductName'],
+            };
+        } else if (PLX.length > 0) {
+            data = {
+                "MATCP": MATCP,
+                "PO": PO,
+                "PLANT": "PLX",
+                "MASTERdb": PLXserver,
+                "MATDATA": PLX[0],
+                "ProductName": PLX[0]['ProductName'],
+            };
+        } else if (PREMIX.length > 0) {
+            data = {
+                "MATCP": MATCP,
+                "PO": PO,
+                "PLANT": "PREMIX",
+                "MASTERdb": PREMIXserver,
+                "MATDATA": PREMIX[0],
+                "ProductName": PREMIX[0]['ProductName'],
+            };
+        } else if (POWDER.length > 0) {
+            data = {
+                "MATCP": MATCP,
+                "PO": PO,
+                "PLANT": "POWDER",
+                "MASTERdb": POWDERserver,
+                "MATDATA": POWDER[0],
+                "ProductName": POWDER[0]['ProductName'],
+            };
+        } else if (LIQUID.length > 0) {
+            data = {
+                "MATCP": MATCP,
+                "PO": PO,
+                "PLANT": "LIQUID",
+                "MASTERdb": LIQUIDserver,
+                "MATDATA": LIQUID[0],
+                "ProductName": LIQUID[0]['ProductName'],
+            };
+        } else if (NOXRUST.length > 0) {
+            data = {
+                "MATCP": MATCP,
+                "PO": PO,
+                "PLANT": "NOXRUST",
+                "MASTERdb": NOXRUSTserver,
+                "MATDATA": NOXRUST[0],
+                "ProductName": NOXRUST[0]['ProductName'],
+            };
+        } else {
+            output = 'The MAT NO. Incorrect';
+        }
 
-      let neworder = {
-          "POID": input['PO'],
-          "MATNO": MATCP,
-          "PO": PO,
-          "PLANT": data["PLANT"],
-          "MASTERdb": data["MASTERdb"],
-          "ProductName": data["ProductName"],
-          "UserID": input['UserID'],
-          "InstrumentID": input['InstrumentID'],
-          "Barcode": input['Barcode'],
-          "STATUS": "ACTIVE",
-          "SEND": "",
-          "timestamp": Date.now(),
+        let neworder = {
+            "POID": input['PO'],
+            "MATNO": MATCP,
+            "PO": PO,
+            "PLANT": data["PLANT"],
+            "MASTERdb": data["MASTERdb"],
+            "ProductName": data["ProductName"],
+            "UserID": input['UserID'],
+            "InstrumentID": input['InstrumentID'],
+            "Barcode": input['Barcode'],
+            "STATUS": "ACTIVE",
+            "SEND": "",
+            "timestamp": Date.now(),
 
-      };
+        };
 
-      if (data["PLANT"] !== "NOdata") {
-          neworder["SPEC"] = data["MATDATA"]["SPEC"][`NVC`];
-          neworder["BDATA"] = {
-              "Result": "",
-          }
-      }
+        if (data["PLANT"] !== "NOdata") {
+            neworder["SPEC"] = data["MATDATA"]["SPEC"][`NVC`];
+            neworder["BDATA"] = {
+                "Result": "",
+            }
+        }
 
-      let check = await mongodb.find(`${neworder['PLANT']}dbMAIN`, 'MAIN', { "POID": neworder['POID'] });
+        let check = await mongodb.find(`${neworder['PLANT']}dbMAIN`, 'MAIN', { "POID": neworder['POID'] });
 
-      if (check.length === 0) {
-          output = 'NOK-NOPO'
-          return res.json(output);
-      } else {
-          let check2 = await mongodb.find(DBins, colection, { "POID": neworder['POID'] });
-          neworder['ED'] = check2.length;
-          if (check2.length > 0) {
-              let check3 = await mongodb.find(DBins, colection, { "POID": neworder['POID'], "STATUS": "ACTIVE" });
-              if (check3.length === 0) {
-                  let ins2 = await mongodb.insertMany(DBins, colection, [neworder]);
-              } else {
-                  output = 'OK'
-                  return res.json(output);
-              }
-          } else {
-              let ins2 = await mongodb.insertMany(DBins, colection, [neworder]);
-          }
+        if (check.length === 0) {
+            output = 'NOK-NOPO'
+            return res.json(output);
+        } else {
+            let check2 = await mongodb.find(DBins, colection, { "POID": neworder['POID'] });
+            neworder['ED'] = check2.length;
+            if (check2.length > 0) {
+                let check3 = await mongodb.find(DBins, colection, { "POID": neworder['POID'], "STATUS": "ACTIVE" });
+                if (check3.length === 0) {
+                    let ins2 = await mongodb.insertMany(DBins, colection, [neworder]);
+                } else {
+                    output = 'OK'
+                    return res.json(output);
+                }
+            } else {
+                let ins2 = await mongodb.insertMany(DBins, colection, [neworder]);
+            }
 
-          output = 'OK'
-      }
+            output = 'OK'
+        }
 
-  }
+    }
 
-  return res.json(output);
+    return res.json(output);
 });
 
 router.post('/KARL_REJ', async (req, res) => {
 
-  console.log("--KARL_REJ--");
-  //-------------------------------------
-  console.log(req.body);
-  let input = req.body;
-  //-------------------------------------
-  output = 'NOK'
-  if (input['Barcode'] != undefined) {
+    console.log("--KARL_REJ--");
+    //-------------------------------------
+    console.log(req.body);
+    let input = req.body;
+    //-------------------------------------
+    output = 'NOK'
+    if (input['Barcode'] != undefined) {
 
-      let ins = await mongodb.update(DBins, colection, { "POID": input['Barcode'], "STATUS": "ACTIVE" }, { $set: { "STATUS": "REJECT" } });
-      output = 'OK'
+        let ins = await mongodb.update(DBins, colection, { "POID": input['Barcode'], "STATUS": "ACTIVE" }, { $set: { "STATUS": "REJECT" } });
+        output = 'OK'
 
-  }
+    }
 
-  return res.json(output);
+    return res.json(output);
 });
 
 
 router.post('/KARL_SEND_DATA', async (req, res) => {
 
-  console.log("--KARL_SEND_DATA--");
-  //-------------------------------------
-  console.log(req.body);
-  let input = req.body;
-  //-------------------------------------
-  output = 'NOK';
-  if (input['Barcode'] != undefined && input['Barcode'] != '') {
+    console.log("--KARL_SEND_DATA--");
+    //-------------------------------------
+    console.log(req.body);
+    let input = req.body;
+    //-------------------------------------
+    output = 'NOK';
+    if (input['Barcode'] != undefined && input['Barcode'] != '') {
 
-      let check1 = await mongodb.find(DBins, colection, { "POID": input['Barcode'], "STATUS": "ACTIVE" });
+        let check1 = await mongodb.find(DBins, colection, { "POID": input['Barcode'], "STATUS": "ACTIVE" });
 
-      if (check1[0][`BDATA`][`Result`] !== '') {
-          outputQ = {
-              poid: input['Barcode'],
-              plant: check1[0][`PLANT`],
-              item: "MOI",
-              value: check1[0][`BDATA`][`Result`],
-          }
+        if (check1[0][`BDATA`][`Result`] !== '') {
+            outputQ = {
+                poid: input['Barcode'],
+                plant: check1[0][`PLANT`],
+                item: "MOI",
+                value: check1[0][`BDATA`][`Result`],
+            }
 
-          let resp = await axios.post('http://172.23.10.34:15000/valueinput', outputQ);
-   
-          if (resp.status == 200) {
-              var ret = resp.data
-             output = ret[`return`]
-             if(ret[`return`] === 'OK'){
-              let ins = await mongodb.update(DBins, colection, { "POID": input['Barcode'], "STATUS": "ACTIVE" }, { $set: { "SEND": "SEND" } });
-             }
-          }
-      }
+            let resp = await axios.post('http://172.23.10.34:15000/valueinput', outputQ);
 
-  }
+            if (resp.status == 200) {
+                var ret = resp.data
+                output = ret[`return`]
+                if (ret[`return`] === 'OK') {
+                    let ins = await mongodb.update(DBins, colection, { "POID": input['Barcode'], "STATUS": "ACTIVE" }, { $set: { "SEND": "SEND" } });
+                }
+            }
+        }
 
-  return res.json(output);
+    }
+
+    return res.json(output);
 });
 
 
@@ -244,9 +244,9 @@ router.post('/KARL_SEND_DATA_ADJ', async (req, res) => {
     //-------------------------------------
     output = 'NOK';
     if (input['Barcode'] != undefined && input['Barcode'] != '') {
-  
+
         let check1 = await mongodb.find(DBins, colection, { "POID": input['Barcode'], "STATUS": "ACTIVE" });
-  
+
         if (check1[0][`BDATA`][`Result`] !== '') {
             outputQ = {
                 poid: input['Barcode'],
@@ -254,22 +254,22 @@ router.post('/KARL_SEND_DATA_ADJ', async (req, res) => {
                 item: "MOI",
                 value: check1[0][`BDATA`][`Result`],
             }
-  
+
             let resp = await axios.post('http://172.23.10.34:15000/valueinputadj', outputQ);
-     
+
             if (resp.status == 200) {
                 var ret = resp.data
-               output = ret[`return`]
-               if(ret[`return`] === 'OK'){
-                let ins = await mongodb.update(DBins, colection, { "POID": input['Barcode'], "STATUS": "ACTIVE" }, { $set: { "SEND": "SEND" } });
-               }
+                output = ret[`return`]
+                if (ret[`return`] === 'OK') {
+                    let ins = await mongodb.update(DBins, colection, { "POID": input['Barcode'], "STATUS": "ACTIVE" }, { $set: { "SEND": "SEND" } });
+                }
             }
         }
-  
+
     }
-  
+
     return res.json(output);
-  });
+});
 
 
 router.post('/KARL_Result', async (req, res) => {
@@ -280,22 +280,41 @@ router.post('/KARL_Result', async (req, res) => {
     let input = req.body;
     //-------------------------------------
     output = 'NOK';
-    if (input['Barcode'] != undefined && input['Barcode'] != ''&& input['Result'] != undefined) {
-  
+    if (input['Barcode'] != undefined && input['Barcode'] != '' && input['Result'] != undefined) {
+
         let check1 = await mongodb.find(DBins, colection, { "POID": input['Barcode'], "STATUS": "ACTIVE" });
-  
-        if(check1.length > 0){
+
+        if (check1.length > 0) {
             let ins = await mongodb.update(DBins, colection, { "POID": input['Barcode'], "STATUS": "ACTIVE" }, { $set: { "BDATA.Result": input['Result'] } });
             output = 'OK';
         }
-  
-    }
-  
-    return res.json(output);
-  });
 
+    }
+
+    return res.json(output);
+});
+
+router.post('/KARL_SHIP_DATA', async (req, res) => {
+
+    console.log("--KARL_SHIP_DATA--");
+    let output = '';
+    if (input['DATA'] != undefined) {
+        outputQ = {
+            // POID: input['POID'],
+            DATA: input['DATA'],
+        }
+
+        let resp = await axios.post('http://172.18.40.7:1880/KARL_SHIP_DATA_M', outputQ);
+    }
+
+
+    return res.json(output);
+});
 
 
 
 
 module.exports = router;
+
+
+
