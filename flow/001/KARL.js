@@ -314,6 +314,26 @@ router.post('/KARL_SHIP_DATA', async (req, res) => {
     return res.json(output);
 });
 
+router.post('/test', async (req, res) => {
+    //-------------------------------------
+    console.log(req.body);
+    let input = req.body;
+    //-------------------------------------
+    console.log("--KARL_SHIP_DATA--");
+    let output = '';
+    // if (input['DATA'] != undefined) {
+    //     outputQ = {
+    //         // POID: input['POID'],
+    //         DATA: input['DATA'],
+    //     }
+
+    //     let resp = await axios.post('http://172.18.40.7:1880/KARL_SHIP_DATA_M', outputQ);
+    // }
+
+
+    return res.json(req.body);
+});
+
 
 
 
