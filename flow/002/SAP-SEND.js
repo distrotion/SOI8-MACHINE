@@ -735,6 +735,7 @@ router.post('/sap_test_get', async (req, res) => {
 
 router.post('/qc_to_sap_check_n_go_new', async (req, res) => {
   //-------------------------------------
+  console.log("---qc_to_sap_check_n_go_new---")
   console.log(req.body);
   let input = req.body;
   //-------------------------------------
@@ -789,13 +790,13 @@ router.post('/qc_to_sap_check_n_go_new', async (req, res) => {
         return res.json({ "status": "no-data" });
       }
 
-      // console.log(plant);
+      console.log(plant);
 
-      let dataD = await mongodb.find(`${plant}dbMAIN`, 'MAIN', { "POID": `${MATCP + input['PO']}`, "SAPSTATUS": "OK" });
+      // let dataD = await mongodb.find(`${plant}dbMAIN`, 'MAIN', { "POID": `${MATCP + input['PO']}`, "SAPSTATUS": "OK" });
 
-      if (dataD.length > 0) {
-        return res.json({ "msg": "SAP HAVE SENT", "satatus": "NOK" });
-      }
+      // if (dataD.length > 0) {
+      //   return res.json({ "msg": "SAP HAVE SENT", "satatus": "NOK" });
+      // }
 
       console.log("-----------------------");
 
@@ -824,6 +825,7 @@ router.post('/qc_to_sap_check_n_go_new', async (req, res) => {
       outputdataC['satatus'] = 'NOK';
 
       for (let k = 0; k < matsapdata.length; k++) {
+        console.log("-----------------------"+`${k}`);
         if (matsapdata[k]["qc"] === undefined || matsapdata[k]["qc"] === "") {
 
           break;
@@ -869,7 +871,7 @@ router.post('/qc_to_sap_check_n_go_new', async (req, res) => {
               "LAST_TIME": "",
               "TABLE_NAME": ""
             }
-            // console.log(outputQ);
+            console.log(outputQ);
           }
 
         } else {
@@ -886,7 +888,7 @@ router.post('/qc_to_sap_check_n_go_new', async (req, res) => {
               "LAST_TIME": "",
               "TABLE_NAME": ""
             }
-            // console.log(outputQ);
+            console.log(outputQ);
             outputdata['satatus'] = 'OK';
             outputdataC['satatus'] = 'OK';
           } else {
@@ -943,6 +945,7 @@ router.post('/qc_to_sap_check_n_go_new', async (req, res) => {
 
 router.post('/qc_to_sap_go_new', async (req, res) => {
   //-------------------------------------
+  console.log("---qc_to_sap_go_new---")
   console.log(req.body);
   let input = req.body;
   //-------------------------------------
@@ -998,11 +1001,11 @@ router.post('/qc_to_sap_go_new', async (req, res) => {
 
       // console.log(plant);
 
-      let dataD = await mongodb.find(`${plant}dbMAIN`, 'MAIN', { "POID": `${MATCP + input['PO']}`, "SAPSTATUS": "OK" });
+      // let dataD = await mongodb.find(`${plant}dbMAIN`, 'MAIN', { "POID": `${MATCP + input['PO']}`, "SAPSTATUS": "OK" });
 
-      if (dataD.length > 0) {
-        return res.json({ "msg": "SAP HAVE SENT", "satatus": "NOK" });
-      }
+      // if (dataD.length > 0) {
+      //   return res.json({ "msg": "SAP HAVE SENT", "satatus": "NOK" });
+      // }
 
       let data = await mongodb.find(`${plant}dbMAIN`, 'MAIN', { "POID": `${MATCP + input['PO']}` });
       let matsapdata = [];
@@ -1047,8 +1050,8 @@ router.post('/qc_to_sap_go_new', async (req, res) => {
               "TABLE_NAME": ""
             }
             console.log(outputQ);
-            // let resp = await axios.post('http://tp-portal.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', outputQ);
-            let resp = await axios.post('http://172.101.1.19/API_QcReport/ZBAPI_QC_INTERFACE', outputQ);
+            let resp = await axios.post('http://tp-portal.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', outputQ);
+            // let resp = await axios.post('https://devsever.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', outputQ);
             if (resp.status == 200) {
               var ret = resp.data
               console.log(ret);
@@ -1085,8 +1088,8 @@ router.post('/qc_to_sap_go_new', async (req, res) => {
             }
             console.log(outputQ);
 
-            // let resp = await axios.post('http://tp-portal.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', outputQ);
-            let resp = await axios.post('http://172.101.1.19/API_QcReport/ZBAPI_QC_INTERFACE', outputQ);
+            let resp = await axios.post('http://tp-portal.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', outputQ);
+            // let resp = await axios.post('https://devsever.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', outputQ);
             if (resp.status == 200) {
               var ret = resp.data
               console.log(ret);
@@ -1115,8 +1118,8 @@ router.post('/qc_to_sap_go_new', async (req, res) => {
             }
             console.log(outputQ);
             outputdata['satatus'] = 'OK';
-            // let resp = await axios.post('http://tp-portal.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', outputQ);
-            let resp = await axios.post('http://172.101.1.19/API_QcReport/ZBAPI_QC_INTERFACE', outputQ);
+            let resp = await axios.post('http://tp-portal.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', outputQ);
+            // let resp = await axios.post('https://devsever.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', outputQ);
             if (resp.status == 200) {
               var ret = resp.data
               console.log(ret);
@@ -1152,8 +1155,8 @@ router.post('/qc_to_sap_go_new', async (req, res) => {
             }
             console.log(outputQ);
             outputdata['satatus'] = 'OK';
-            // let resp = await axios.post('http://tp-portal.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', outputQ);
-            let resp = await axios.post('http://172.101.1.19/API_QcReport/ZBAPI_QC_INTERFACE', outputQ);
+            let resp = await axios.post('http://tp-portal.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', outputQ);
+            // let resp = await axios.post('https://devsever.thaiparker.co.th/API_QcReport/ZBAPI_QC_INTERFACE', outputQ);
             if (resp.status == 200) {
               var ret = resp.data
               console.log(ret);
