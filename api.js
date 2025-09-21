@@ -6,6 +6,8 @@ router.use(require("./flow/001/DB"));
 router.use(require("./flow/001/FP"));
 router.use(require("./flow/001/PH"));
 router.use(require("./flow/001/SG"));
+router.use(require("./flow/001/FA"));
+router.use(require("./flow/001/TA"));
 router.use(require("./flow/001/DENSITY"));
 router.use(require("./flow/001/KARL"));
 router.use(require("./flow/001/BALANCEa"));
