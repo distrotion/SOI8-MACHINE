@@ -713,7 +713,7 @@ router.post('/qc_to_sap_check_n_go', async (req, res) => {
   }
 
   //matsapdata.length checklistcount
-  query2 = `INSERT  INTO [SOI8LOG].[dbo].[confirmweightrecore] ([order],[weight],[tank],[plant],[seq]) VALUES ('${input['PO']}','${input['wegiht']}','','${plant}','2')`
+  query2 = `INSERT  INTO [SOI8LOG].[dbo].[confirmweightrecore] ([order],[weight],[tank],[plant],[seq]) VALUES ('${input['MAT']}${input['PO']}','${input['wegiht']}','','${plant}','2')`
   let db2 = await mssqlR.qureyR(query2);
 
   if (outputdataC['satatus'] === 'OK' && outputdataC['sapcount'] === outputdataC['checklistcount']) {
@@ -931,7 +931,7 @@ router.post('/qc_to_sap_check_n_go_new', async (req, res) => {
     }
   }
 
-  query2 = `INSERT  INTO [SOI8LOG].[dbo].[confirmweightrecore] ([order],[weight],[tank],[plant],[seq]) VALUES ('${input['PO']}','${input['wegiht']}','','${plant}','2')`
+  query2 = `INSERT  INTO [SOI8LOG].[dbo].[confirmweightrecore] ([order],[weight],[tank],[plant],[seq]) VALUES ('${input['MAT']}${input['PO']}','${input['wegiht']}','','${plant}','2')`
   let db2 = await mssqlR.qureyR(query2);
 
   //matsapdata.length checklistcount
