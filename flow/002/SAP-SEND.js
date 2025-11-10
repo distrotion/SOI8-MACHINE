@@ -527,6 +527,7 @@ router.post('/qc_to_sap_check_n_go', async (req, res) => {
   //-------------------------------------
   let outputdata = {};
   let outputdataC = {};
+      let plant = ``;
 
   if (input['MAT'] != undefined && input['PO'] != undefined) {
     let check1 = await mongodb.find(database, masterdata, { Material: { $regex: input['MAT'] } });
@@ -545,7 +546,7 @@ router.post('/qc_to_sap_check_n_go', async (req, res) => {
       let LIQUID = await mongodb.find(LIQUIDserver, dbin, { "MATNO": MATCP });
       let NOXRUST = await mongodb.find(NOXRUSTserver, dbin, { "MATNO": MATCP });
 
-      let plant = ``;
+  
 
       if (TRITRATING.length > 0) {
         plant = 'TRITRATING'
@@ -744,6 +745,7 @@ router.post('/qc_to_sap_check_n_go_new', async (req, res) => {
   //-------------------------------------
   let outputdata = {};
   let outputdataC = {};
+      let plant = ``;
 
   if (input['MAT'] != undefined && input['PO'] != undefined) {
     let check1 = await mongodb.find(database, masterdata, { Material: { $regex: input['MAT'] } });
@@ -762,7 +764,7 @@ router.post('/qc_to_sap_check_n_go_new', async (req, res) => {
       let LIQUID = await mongodb.find(LIQUIDserver, dbin, { "MATNO": MATCP });
       let NOXRUST = await mongodb.find(NOXRUSTserver, dbin, { "MATNO": MATCP });
 
-      let plant = ``;
+      // let plant = ``;
 
       if (TRITRATING.length > 0) {
         plant = 'TRITRATING'
