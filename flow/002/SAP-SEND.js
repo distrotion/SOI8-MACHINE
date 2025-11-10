@@ -5,6 +5,7 @@ let mongodb = require('../../function/mongodb');
 let request = require('request');
 var axios = require('axios');
 let mssql = require('./../../function/mssql');
+let mssqlR = require('./../../function/mssqlR');
 
 //
 let DBins = 'INSdb'
@@ -711,6 +712,8 @@ router.post('/qc_to_sap_check_n_go', async (req, res) => {
   }
 
   //matsapdata.length checklistcount
+  query2 = `INSERT  INTO [SOI8LOG].[dbo].[confirmweightrecore] ([order],[weight],[tank],[plant],[seq]) VALUES ('${input['PO']}','${input['wegiht']}','','${plant}','2')`
+  let db2 = await mssqlR.qureyR(query2);
 
   if (outputdataC['satatus'] === 'OK' && outputdataC['sapcount'] === outputdataC['checklistcount']) {
 
@@ -925,6 +928,9 @@ router.post('/qc_to_sap_check_n_go_new', async (req, res) => {
       outputdataC['sapcount'] = matsapdata.length;
     }
   }
+
+  query2 = `INSERT  INTO [SOI8LOG].[dbo].[confirmweightrecore] ([order],[weight],[tank],[plant],[seq]) VALUES ('${input['PO']}','${input['wegiht']}','','${plant}','2')`
+  let db2 = await mssqlR.qureyR(query2);
 
   //matsapdata.length checklistcount
 
