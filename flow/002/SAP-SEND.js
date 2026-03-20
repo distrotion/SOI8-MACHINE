@@ -344,6 +344,7 @@ router.post('/qc_to_sap_go', async (req, res) => {
       }
 
       let data = await mongodb.find(`${plant}dbMAIN`, 'MAIN', { "POID": `${MATCP + input['PO']}` });
+      
       let matsapdata = [];
       if (data.length > 0) {
         // console.log(data[0]['checklist']);
@@ -529,7 +530,7 @@ router.post('/qc_to_sap_check_n_go', async (req, res) => {
   let outputdataC = {};
       let plant = ``;
 
-  if (input['MAT'] != undefined && input['PO'] != undefined) {
+  if (input['MAT'] != undefined && input['PO'] != undefined&& input['timestart'] != undefined&& input['timestop'] != undefined) {
     let check1 = await mongodb.find(database, masterdata, { Material: { $regex: input['MAT'] } });
     // console.log(check1.length)
     if (check1.length > 0) {
@@ -590,6 +591,7 @@ router.post('/qc_to_sap_check_n_go', async (req, res) => {
       let data = await mongodb.find(`${plant}dbMAIN`, 'MAIN', { "POID": `${MATCP + input['PO']}` });
       let matsapdata = [];
       if (data.length > 0) {
+        let ins = await mongodb.update(`${plant}dbMAIN`, 'MAIN', { "POID": `${input['MAT'] + input['PO']}` }, { $set: { "checktime": {"timestart":`${input['timestart']}`,"timestop":`${input['timestop']}`} } });
         // console.log(data[0]['checklist']);
         outputdata = { "data": data };
         outputdata['checklist'] = data[0]['checklist'];

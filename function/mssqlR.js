@@ -1,41 +1,70 @@
 const sql = require('mssql');
+
 const config = {
   user: "sa",
   password: "Automatic",
   database: "",
   server: '172.23.10.39',
+  connectionTimeout: 15000,
+  requestTimeout: 30000,
   pool: {
-    // max: 10,
-    // min: 0,
-    idleTimeoutMillis: 30000
+    max: 10,
+    min: 2,
+    idleTimeoutMillis: 30000,
+    acquireTimeoutMillis: 30000,
   },
   options: {
-    encrypt: false, // for azure
-    trustServerCertificate: true, // change to true for local dev / self-signed certs
+    encrypt: false,
+    trustServerCertificate: true,
   }
+};
+
+let pool = null;
+let poolPromise = null;
+
+async function getPool() {
+  if (pool && pool.connected) return pool;
+  if (!poolPromise) {
+    poolPromise = sql.connect(config)
+      .then(p => {
+        pool = p;
+        pool.on('error', err => {
+          console.error('[mssqlR] pool error:', err);
+          pool = null;
+        });
+        poolPromise = null;
+        return pool;
+      })
+      .catch(err => {
+        poolPromise = null;
+        throw err;
+      });
+  }
+  return poolPromise;
 }
 
 exports.qureyR = async (input) => {
   try {
-    await sql.connect(config)
-    
-    const result = await sql.query(input).then((v) => {
-      // console.log(`---------------`);
-      // console.log(v);  
-      out = v;   
-      // console.log(`---------------`);
-      return v;
-    
-    }).then(() => sql.close())
-  
-    //  console.dir(result)
-    return out;
+    const p = await getPool();
+    const result = await p.request().query(input);
+    return result;
   } catch (err) {
-    return err;
+    console.error('[mssqlR] qureyR error:', err);
+    throw err;
   }
 };
 
-
-// .then((v) => console.log(v))
-//     .then(() => sql.close())
-
+exports.qureyRP = async (queryString, params = {}) => {
+  try {
+    const p = await getPool();
+    const request = p.request();
+    for (const [key, value] of Object.entries(params)) {
+      request.input(key, value);
+    }
+    const result = await request.query(queryString);
+    return result;
+  } catch (err) {
+    console.error('[mssqlR] qureyRP error:', err);
+    throw err;
+  }
+};
