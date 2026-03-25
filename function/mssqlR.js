@@ -22,7 +22,7 @@ const config = {
 let pool = null;
 let poolPromise = null;
 
-async function getPool() {
+async function getPools() {
   if (pool && pool.connected) return pool;
   if (!poolPromise) {
     poolPromise = sql.connect(config)
@@ -45,7 +45,7 @@ async function getPool() {
 
 exports.qureyR = async (input) => {
   try {
-    const p = await getPool();
+    const p = await getPools();
     const result = await p.request().query(input);
     return result;
   } catch (err) {
@@ -56,7 +56,7 @@ exports.qureyR = async (input) => {
 
 exports.qureyRP = async (queryString, params = {}) => {
   try {
-    const p = await getPool();
+    const p = await getPools();
     const request = p.request();
     for (const [key, value] of Object.entries(params)) {
       request.input(key, value);
