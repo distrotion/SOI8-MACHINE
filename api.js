@@ -20,7 +20,6 @@ router.use(require("./flow/001/PENETROMETER"));
 //-----------------------------------------
 router.use(require("./flow/002/SAP-SEND"));
 router.use(require("./flow/002/sapdata"));
-router.use(require("./flow/002/register"));
 //-----------------------------------------flow/002/register.js
 //SAP-SEND
 //-----------------------------------------
